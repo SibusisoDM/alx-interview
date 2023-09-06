@@ -1,69 +1,61 @@
 #!/usr/bin/python3
-"""
-Task 0: N queens
-"""
+"""N Queens placement on NxN chessboard"""
+
 
 import sys
 
 
-def canMove(final, row, column):
-    """
-    Checks if the queen would be able to move
-    """
-    rows = []
-    columns = []
-    top_left = []
-    top_right = []
-
-    for nums in final:
-        rows.append(nums[0])
-        columns.append(nums[1])
-        top_left.append(nums[1] - nums[0])
-        top_right.append(nums[0] + nums[1])
-
-    if row in rows or column in columns:
-        return False
-    if column - row in top_left or row + column in top_right:
-        return False
-
-    return True
+def generate_solutions(row, column):
+    solution = [[]]
+    for queen in range(row):
+        solution = place_queen(queen, column, solution)
+    return solution
 
 
-def nqueens(final, column, checked_queens=[]):
-    """
-    The main recursive program
-    """
-    for item in range(n):
-        if canMove(final, item, column):
-            final.append([item, column])
-            if column == n - 1:
-                checked_queens.append(final.copy())
-                del final[-1]
-            else:
-                nqueens(final, column + 1)
+def place_queen(queen, column, prev_solution):
+    safe_position = []
+    for array in prev_solution:
+        for x in range(column):
+            if is_safe(queen, x, array):
+                safe_position.append(array + [x])
+    return safe_position
 
-    if len(final) > 0:
-        del final[-1]
-    return checked_queens
 
-if __name__ == '__main__':
+def is_safe(q, x, array):
+    if x in array:
+        return (False)
+    else:
+        return all(abs(array[column] - x) != q - column
+                   for column in range(q))
 
+
+def init():
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-
-    try:
+    if sys.argv[1].isdigit():
         n = int(sys.argv[1])
-    except:
+    else:
         print("N must be a number")
         sys.exit(1)
-
     if n < 4:
         print("N must be at least 4")
         sys.exit(1)
+    return (n)
 
-    final = []
-    final = nqueens(final, 0)
 
-    for nums in final:
-        print(nums)
+def n_queens():
+
+    n = init()
+    # generate all solutions
+    solutions = generate_solutions(n, n)
+    # print solutions
+    for array in solutions:
+        clean = []
+        for q, x in enumerate(array):
+            clean.append([q, x])
+        print(clean)
+
+
+if __name__ == '__main__':
+    n_queens()
