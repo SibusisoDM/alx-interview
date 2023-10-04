@@ -1,26 +1,23 @@
 #!/usr/bin/python3
-"""
-Rotate 2D Matrix
-"""
+"""Rotates 2-D matrix:"""
 
 
-def rotate_2d_matrix(matrix):
-    """rotate two dimension matrix 90 degrees clockwise
-    Args:
-        matrix (list[[list]]): a matrix
-    """
-    n = len(matrix)
-    for i in range(int(n / 2)):
-        y = (n - i - 1)
-        for j in range(i, y):
-            x = (n - 1 - j)
-            # current number
-            tmp = matrix[i][j]
-            # change top for left
-            matrix[i][j] = matrix[x][i]
-            # change left for bottom
-            matrix[x][i] = matrix[y][x]
-            # change bottom for right
-            matrix[y][x] = matrix[j][y]
-            # change right for top
-            matrix[j][y] = tmp
+def rotate_2d_matrix(m):
+    """Rotates in-place"""
+    n = len(m)
+    temp1, temp2 = 0, 0
+
+    for j in range(0, len(m) // 2 + 1):
+        for i in range(j, n - 1):
+            # For r in first row, put in same position in col from back
+            temp1 = m[i][n - 1]
+            m[i][n - 1] = m[j][i]
+            # put that temp1 in reverse position in row from bottom
+            temp2 = m[n - 1][n - 1 - i + j]
+            m[n - 1][n - 1 - i + j] = temp1
+            # put that temp2 in same position in col from front
+            temp1 = m[n - 1 - i + j][j]
+            m[n - 1 - i + j][j] = temp2
+            # put that temp1 in reverse position in row from top
+            m[j][i] = temp1
+        n -= 1
